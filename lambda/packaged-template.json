@@ -6,6 +6,36 @@ Resources:
   MyLambda:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: my-upb-function
       Handler: lambda.handler
       Runtime: python3.6
       CodeUri: s3://deploy-bucket-carlos/b6d927d6524b7e2eb28d25e3e2de4e47
+      Role:
+        Fn::GetAtt:
+        - MyLambdaRole
+        - Arn
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: my-cf-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName: my-lambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
