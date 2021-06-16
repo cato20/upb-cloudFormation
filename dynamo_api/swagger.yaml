@@ -1,9 +1,18 @@
 openapi: 3.0.0
 
 paths:
-  /user:
+  /user/{userId}:
     get:
       summary: This endpoint return a user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: User unique id.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
       x-amazon-apigateway-integration:
         type: "aws_proxy"
         uri:
@@ -11,6 +20,28 @@ paths:
         httpMethod: "POST"
     put:
       summary: This endpoint register a user to db
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                age:
+                  type: string
+                last_name:
+                  type: string
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: User unique id.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
       x-amazon-apigateway-integration:
         type: "aws_proxy"
         uri:

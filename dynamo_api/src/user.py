@@ -11,9 +11,14 @@ table = dynamodb.Table(users_table)
 def getUser(event, context):
     print(json.dumps({"running": True}))
     print(json.dumps(event))
+    
+    path = event["path"]
+    array_path = path.split("/")
+    user_id =array_path[-1]
+    
     response = table.get_item(
         Key={
-            'pk': 'user_',
+            'pk': user_id,
             'sk': 'age'
         }
     )
@@ -27,10 +32,18 @@ def getUser(event, context):
 def putUser(event, context):
     print(json.dumps({"running": True}))
     print(json.dumps(event))
+    path = event["path"]
+    array_path = path.split("/")
+    user_id =array_path[-1]
+    body = event["body"]
+    bodyObject = json.loads(body)
     table.put_item(
         Item={
-            'pk': 'user_',
+            'pk': user_id,
             'sk': 'age',
+            'name': bodyObject['name'],
+            'last_name': bodyObject['last_name'],
+            'age': bodyObject['age']
         }
     )
     
